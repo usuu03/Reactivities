@@ -1,61 +1,55 @@
 {
-    // If you want to untrack local changes to this file, run:
-    // git update-index --assume-unchanged .vscode/settings.json
-    // Or:
-    // git update-index --skip-worktree .vscode/settings.json
-    // C# Settings
-    "csharp.inlayHints.enableInlayHintsForImplicitVariableTypes": true,
-    "dotnet.inlayHints.enableInlayHintsForObjectCreationParameters": true,
-    "dotnet.inlayHints.suppressInlayHintsForParametersThatMatchMethodIntent": true,
-    "csharp.inlayHints.enableInlayHintsForTypes": true,
-    "csharp.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
-    "dotnet.formatting.organizeImportsOnFormat": true,
-    // Personalisation
-    "workbench.activityBar.location": "bottom",
-    "workbench.sideBar.location": "right",
-    "workbench.startupEditor": "none",
-    // Lint & Format
-    "editor.formatOnSave": true,
-    "[javascript]": {
-        "editor.defaultFormatter": "biomejs.biome"
-    },
-    "[javascriptreact]": {
-        "editor.defaultFormatter": "biomejs.biome"
-    },
-    "[typescript]": {
-        "editor.defaultFormatter": "biomejs.biome"
-    },
-    "[typescriptreact]": {
-        "editor.defaultFormatter": "biomejs.biome"
-    },
-    "[json]": {
-        "editor.defaultFormatter": "biomejs.biome"
-    },
-    "[csharp]": {
-        "editor.defaultFormatter": "ms-dotnettools.csharp",
-        "editor.codeActionsOnSave": [
-            "source.organizeImports",
-            "source.fixAll"
-        ]
-    },
-    "javascript.preferences.quoteStyle": "double",
-    "typescript.preferences.quoteStyle": "double",
-    "typescript.preferences.preferTypeOnlyAutoImports": true,
-    "typescript.preferences.importModuleSpecifier": "non-relative",
-    "biome.lspBin": "./frontend/Internal.Website/node_modules/@biomejs/biome/bin/biome",
-    "dotnet.defaultSolution": "./Orion.sln",
-    "typescript.inlayHints.variableTypes.enabled": true,
-    "remote.portsAttributes": {
-        "5000": {
-            "label": "APIGateway",
-            "onAutoForward": "ignore"
-        },
-        "5432": {
-            "label": "PostgreSQL",
-            "onAutoForward": "ignore"
-        },
-        "3000-6000": {
-            "onAutoForward": "ignore"
-        },
-    },
+	// If you want to untrack local changes to this file, run:
+	// git update-index --assume-unchanged .vscode/settings.json
+	// Or:
+	// git update-index --skip-worktree .vscode/settings.json
+	// C# Settings
+	"csharp.inlayHints.enableInlayHintsForImplicitVariableTypes": true,
+	"dotnet.inlayHints.enableInlayHintsForObjectCreationParameters": true,
+	"dotnet.inlayHints.suppressInlayHintsForParametersThatMatchMethodIntent": true,
+	"csharp.inlayHints.enableInlayHintsForTypes": true,
+	"csharp.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
+	"dotnet.formatting.organizeImportsOnFormat": true,
+	// Personalisation
+	// Lint & Format
+	"editor.formatOnSave": true,
+	"[javascript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "biomejs.biome"
+	},
+	"[csharp]": {
+		"editor.defaultFormatter": "ms-dotnettools.csharp",
+		"editor.codeActionsOnSave": ["source.organizeImports", "source.fixAll"]
+	},
+	"javascript.preferences.quoteStyle": "double",
+	"typescript.preferences.quoteStyle": "double",
+	"typescript.preferences.preferTypeOnlyAutoImports": true,
+	"typescript.preferences.importModuleSpecifier": "non-relative",
+	"biome.lspBin": "./frontend/Internal.Website/node_modules/@biomejs/biome/bin/biome",
+	"dotnet.defaultSolution": "./Orion.sln",
+	"typescript.inlayHints.variableTypes.enabled": true,
+	"remote.portsAttributes": {
+		"5000": {
+			"label": "APIGateway",
+			"onAutoForward": "ignore"
+		},
+		"5432": {
+			"label": "PostgreSQL",
+			"onAutoForward": "ignore"
+		},
+		"3000-6000": {
+			"onAutoForward": "ignore"
+		}
+	}
 }

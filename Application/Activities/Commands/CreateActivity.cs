@@ -2,6 +2,7 @@ using System;
 using Application.Activities.DTO;
 using AutoMapper;
 using Domain;
+using FluentValidation;
 using MediatR;
 using Persistence;
 
@@ -22,19 +23,20 @@ public class CreateActivity
     // Handler class to process the Command and performs the actual activity creation
     // It implements the IRequestHandler interface from MediatR
     // and specifies that it handles the Command type and returns a string
-    public class Handler(AppDbContext context, IMapper mapper) : IRequestHandler<Command, string>
+    public class Handler(AppDbContext context, IMapper mapper, IValidator<Command> validator) : IRequestHandler<Command, string>
     {
         // Handle Method contains the logic for processing the command
         public async Task<string> Handle(Command request, CancellationToken cancellationToken)
         {
+            await validator.ValidateAndThrowAsync(request);
             var activity = mapper.Map<Activity>(request.ActivityDto);
             // Add the new activity to the database context
             context.Activities.Add(activity);
-            
+
             // Save changes to the database
             // CancellationToken is used to cancel the operation if needed
             await context.SaveChangesAsync(cancellationToken);
-            
+
             // Return the ID of the newly created activity
             return activity.Id;
         }

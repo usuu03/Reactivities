@@ -1,5 +1,8 @@
+using Application.Activities.Commands;
 using Application.Activities.Queries;
+using Application.Activities.Validators;
 using Application.Common;
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -13,7 +16,7 @@ builder.Services.AddControllers();
 
 // Tells .NET to use AppDbContext to talk to the database
 // and use SQLite as the database provider. The connection string is read from the appsettings.json file.
-builder.Services.AddDbContext<AppDbContext>(opt => 
+builder.Services.AddDbContext<AppDbContext>(opt =>
     opt.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddCors();
@@ -23,6 +26,9 @@ builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetAct
 
 // Adds the AutoMapper service to the DI container
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
+// Adds the FluentValidation service to the DI container
+builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 
 // Builds the app
 var app = builder.Build();
