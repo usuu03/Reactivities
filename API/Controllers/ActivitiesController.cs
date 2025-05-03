@@ -2,6 +2,7 @@ using System;
 using Application.Activities.Commands;
 using Application.Activities.DTO;
 using Application.Activities.Queries;
+using Application.Common;
 using Domain;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -29,7 +30,8 @@ public class ActivitiesController : BaseApiController
     // Method that returns the details of a specific activity by its ID
     public async Task<ActionResult<Activity>> GetActivityDetail(string id)
     {
-       return await Mediator.Send(new GetActivityDetails.Query{Id = id});
+        return HandleResult(await Mediator.Send(new GetActivityDetails.Query { Id = id }));
+
     }
 
     [HttpPost]
@@ -37,14 +39,14 @@ public class ActivitiesController : BaseApiController
     public async Task<ActionResult<string>> CreateActivity(CreateActivityDTO activityDto)
     {
         // Sends the command to create a new activity and returns the result
-       return await Mediator.Send(new CreateActivity.Command{ActivityDto = activityDto});
+        return await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto });
     }
 
     [HttpPut("{id}")]
     // Method that updates an existing activity by its ID
     public async Task<ActionResult> EditActivity(Activity activity)
     {
-        await Mediator.Send(new EditActivity.Command{Activity = activity});
+        await Mediator.Send(new EditActivity.Command { Activity = activity });
         return NoContent();
     }
 
@@ -52,7 +54,7 @@ public class ActivitiesController : BaseApiController
     // Method that deletes an existing activity by its ID
     public async Task<ActionResult> DeleteActivity(string id)
     {
-        await Mediator.Send(new DeleteActivity.Command{Id = id});
+        await Mediator.Send(new DeleteActivity.Command { Id = id });
         return Ok();
     }
 }
