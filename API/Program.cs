@@ -1,3 +1,4 @@
+using API.Middleware;
 using Application.Activities.Commands;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
@@ -22,7 +23,11 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 builder.Services.AddCors();
 
 // Adds the MediatR service to the DI container
-builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>());
+builder.Services.AddMediatR(x =>
+{
+    x.RegisterServicesFromAssemblyContaining<GetActivityList.Handler>();
+    x.AddOpenBehavior(typeof(ValidationBehaviour<,>));
+});
 
 // Adds the AutoMapper service to the DI container
 builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
@@ -30,8 +35,15 @@ builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
 // Adds the FluentValidation service to the DI container
 builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 
+// Middleware for handling exceptions globally
+// Only created when needed, not at startup
+builder.Services.AddTransient<ExceptionMiddleware>();
+
 // Builds the app
 var app = builder.Build();
+
+// Middleware for handling exceptions globally
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseCors(x => x
     .AllowAnyHeader()
