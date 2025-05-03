@@ -39,22 +39,21 @@ public class ActivitiesController : BaseApiController
     public async Task<ActionResult<string>> CreateActivity(CreateActivityDTO activityDto)
     {
         // Sends the command to create a new activity and returns the result
-        return await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto });
+        return HandleResult(await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto }));
     }
 
     [HttpPut("{id}")]
     // Method that updates an existing activity by its ID
     public async Task<ActionResult> EditActivity(Activity activity)
     {
-        await Mediator.Send(new EditActivity.Command { Activity = activity });
-        return NoContent();
+        return HandleResult(await Mediator.Send(new EditActivity.Command { Activity = activity }));
+
     }
 
     [HttpDelete("{id}")]
     // Method that deletes an existing activity by its ID
     public async Task<ActionResult> DeleteActivity(string id)
     {
-        await Mediator.Send(new DeleteActivity.Command { Id = id });
-        return Ok();
+        return HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));
     }
 }
