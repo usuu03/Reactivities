@@ -1,4 +1,5 @@
 using System;
+using Application.Activities.DTOs;
 using Application.Common;
 using AutoMapper;
 using Domain;
@@ -14,9 +15,8 @@ public class EditActivity
     // It implements the IRequest interface from MediatR
     public class Command : IRequest<Result<Unit>>
     {
-        // The Activity object to be edited. Marked as required
-        // to ensure that it is provided when editing an activity
-        public required Activity Activity { get; set; }
+
+        public required EditActivityDto ActivityDto { get; set; }
     }
 
     // Handler class to process the Command and performs the actual activity editing
@@ -29,12 +29,12 @@ public class EditActivity
             // Find the activity in the database by its ID.
             // If the activity is not found, throw an exception.
             var activity = await context.Activities
-                .FindAsync([request.Activity.Id], cancellationToken);
+                .FindAsync([request.ActivityDto.Id], cancellationToken);
 
             if (activity == null) return Result<Unit>.Failure("Activity not found", 404);
 
             // The mapper is used to map the properties from the request to the existing activity.
-            mapper.Map(request.Activity, activity);
+            mapper.Map(request.ActivityDto, activity);
 
             var result = await context.SaveChangesAsync(cancellationToken) > 0;
 

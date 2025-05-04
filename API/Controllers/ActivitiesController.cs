@@ -1,6 +1,7 @@
 using System;
 using Application.Activities.Commands;
 using Application.Activities.DTO;
+using Application.Activities.DTOs;
 using Application.Activities.Queries;
 using Application.Common;
 using Domain;
@@ -42,11 +43,11 @@ public class ActivitiesController : BaseApiController
         return HandleResult(await Mediator.Send(new CreateActivity.Command { ActivityDto = activityDto }));
     }
 
-    [HttpPut("{id}")]
+    [HttpPut]
     // Method that updates an existing activity by its ID
-    public async Task<ActionResult> EditActivity(Activity activity)
+    public async Task<ActionResult> EditActivity(EditActivityDto activity)
     {
-        return HandleResult(await Mediator.Send(new EditActivity.Command { Activity = activity }));
+        return HandleResult(await Mediator.Send(new EditActivity.Command { ActivityDto = activity }));
 
     }
 
@@ -55,5 +56,6 @@ public class ActivitiesController : BaseApiController
     public async Task<ActionResult> DeleteActivity(string id)
     {
         return HandleResult(await Mediator.Send(new DeleteActivity.Command { Id = id }));
+
     }
 }
