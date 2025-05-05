@@ -11,6 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import TextInput from "../../../app/shared/components/TextInput";
 import SelectInput from "../../../app/shared/components/SelectInput";
 import { categoryOptions } from "./__helper__/categoryOptions";
+import DateTimeInput from "../../../app/shared/components/DateTimeInput";
 
 export default function ActivityForm() {
 	// Initializing the form with React Hook Form and Zod resolver
@@ -26,7 +27,7 @@ export default function ActivityForm() {
 
 	// Effect to reset the form with activity data when it changes
 	useEffect(() => {
-		if (activity) reset(activity);
+		if (activity) reset({ ...activity, date: new Date(activity.date) });
 	}, [activity, reset]);
 
 	// Function to handle form submission
@@ -64,7 +65,7 @@ export default function ActivityForm() {
 					name="category"
 					control={control}
 				/>
-				<TextInput label="Date" control={control} name="date" />
+				<DateTimeInput label="Date" control={control} name="date" />
 				<TextInput label="City" control={control} name="city" />
 				<TextInput label="Venue" control={control} name="venue" />
 				<Box display="flex" justifyContent="end" gap={3}>
