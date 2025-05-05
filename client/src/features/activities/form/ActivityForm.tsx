@@ -1,25 +1,40 @@
-import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import { Box, Button, Paper, Typography } from "@mui/material";
 import { useActivities } from "../../../lib/hooks/useActivities";
 import { useNavigate, useParams } from "react-router";
-import { useForm, type FieldValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { useEffect } from "react";
+import {
+	activitySchema,
+	type ActivitySchema,
+} from "../../../lib/schema/activitySchema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import TextInput from "../../../app/shared/components/TextInput";
 
 export default function ActivityForm() {
-	const { register, reset, handleSubmit } = useForm();
+	// Initializing the form with React Hook Form and Zod resolver
+	const { control, reset, handleSubmit } = useForm<ActivitySchema>({
+		mode: "onTouched",
+		resolver: zodResolver(activitySchema), // Using Zod schema for validation
+	});
 	const { id } = useParams();
+	// Custom hook to fetch activity data and provide update/create functionality
 	const { updateActivity, createActivity, activity, isLoadingActivty } =
 		useActivities(id);
 	const navigate = useNavigate();
 
+	// Effect to reset the form with activity data when it changes
 	useEffect(() => {
 		if (activity) reset(activity);
 	}, [activity, reset]);
 
-	const onSubmit = async (data: FieldValues) => {
+	// Function to handle form submission
+	const onSubmit = async (data: ActivitySchema) => {
 		console.log(data);
 	};
 
+	// Show a loading message while the activity data is being fetched
 	if (isLoadingActivty) return <Typography>Loading activity...</Typography>;
+
 	return (
 		<Paper sx={{ padding: 3, borderRadius: 3 }}>
 			<Typography variant="h5" gutterBottom color="primary">
@@ -32,43 +47,18 @@ export default function ActivityForm() {
 				flexDirection="column"
 				gap={3}
 			>
-				<TextField
-					{...register("title")}
-					label="Title"
-					defaultValue={activity?.title}
-				/>
-				<TextField
-					{...register("description")}
+				<TextInput label="Title" control={control} name="title" />
+				<TextInput
 					label="Description"
-					defaultValue={activity?.description}
+					control={control}
+					name="description"
 					multiline
 					rows={3}
 				/>
-				<TextField
-					{...register("category")}
-					label="Category"
-					defaultValue={activity?.category}
-				/>
-				<TextField
-					{...register("date")}
-					label="Date"
-					type="date"
-					defaultValue={
-						activity?.date
-							? new Date(activity.date).toISOString().split("T")[0]
-							: new Date().toISOString().split("T")[0]
-					}
-				/>
-				<TextField
-					{...register("city")}
-					label="City"
-					defaultValue={activity?.city}
-				/>
-				<TextField
-					{...register("venue")}
-					label="Venue"
-					defaultValue={activity?.venue}
-				/>
+				<TextInput label="Category" control={control} name="category" />
+				<TextInput label="Date" control={control} name="date" />
+				<TextInput label="City" control={control} name="city" />
+				<TextInput label="Venue" control={control} name="venue" />
 				<Box display="flex" justifyContent="end" gap={3}>
 					<Button
 						color="inherit"
