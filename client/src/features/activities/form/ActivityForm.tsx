@@ -12,6 +12,7 @@ import TextInput from "../../../app/shared/components/TextInput";
 import SelectInput from "../../../app/shared/components/SelectInput";
 import { categoryOptions } from "./__helper__/categoryOptions";
 import DateTimeInput from "../../../app/shared/components/DateTimeInput";
+import LocationInput from "../../../app/shared/components/LocationInput";
 
 export default function ActivityForm() {
 	// Initializing the form with React Hook Form and Zod resolver
@@ -27,12 +28,45 @@ export default function ActivityForm() {
 
 	// Effect to reset the form with activity data when it changes
 	useEffect(() => {
-		if (activity) reset({ ...activity, date: new Date(activity.date) });
+		if (activity)
+			reset({
+				...activity,
+				location: {
+					venue: activity.venue,
+					city: activity.city,
+					latitude: activity.latitude,
+					longitude: activity.longitude,
+				},
+			});
 	}, [activity, reset]);
 
 	// Function to handle form submission
 	const onSubmit = async (data: ActivitySchema) => {
-		console.log(data);
+		const { location, ...rest } = data;
+		const activityData = {
+			...rest,
+			...location,
+		};
+		try {
+			if (activity) {
+				updateActivity.mutate(
+					{ ...activity, ...activityData },
+					{
+						onSuccess: () => {
+							navigate(`/activities/${activity.id}`);
+						},
+					},
+				);
+			} else {
+				createActivity.mutate(activityData, {
+					onSuccess: (id) => {
+						navigate(`/activities/${id}`);
+					},
+				});
+			}
+		} catch (error) {
+			console.error(error);
+		}
 	};
 
 	// Show a loading message while the activity data is being fetched
@@ -58,16 +92,21 @@ export default function ActivityForm() {
 					multiline
 					rows={3}
 				/>
+				<Box display="flex" gap={3}>
+					<SelectInput
+						items={categoryOptions}
+						label="Category"
+						name="category"
+						control={control}
+					/>
+					<DateTimeInput label="Date" control={control} name="date" />
+				</Box>
 
-				<SelectInput
-					items={categoryOptions}
-					label="Category"
-					name="category"
+				<LocationInput
 					control={control}
+					label="Enter the location"
+					name="location"
 				/>
-				<DateTimeInput label="Date" control={control} name="date" />
-				<TextInput label="City" control={control} name="city" />
-				<TextInput label="Venue" control={control} name="venue" />
 				<Box display="flex" justifyContent="end" gap={3}>
 					<Button
 						color="inherit"
