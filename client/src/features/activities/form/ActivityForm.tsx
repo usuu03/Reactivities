@@ -50,19 +50,28 @@ export default function ActivityForm() {
 		try {
 			if (activity) {
 				updateActivity.mutate(
-					{ ...activity, ...activityData },
 					{
-						onSuccess: () => {
-							navigate(`/activities/${activity.id}`);
-						},
+						...activity,
+						...activityData,
+					},
+					{
+						onSuccess: () => navigate(`/activities/${activity.id}`),
 					},
 				);
 			} else {
-				createActivity.mutate(activityData, {
-					onSuccess: (id) => {
-						navigate(`/activities/${id}`);
+				createActivity.mutate(
+					{
+						...activityData,
+						id: "",
+						isCancelled: false,
+						city: activityData.city || "",
 					},
-				});
+					{
+						onSuccess: (id) => {
+							navigate(`/activities/${id}`);
+						},
+					},
+				);
 			}
 		} catch (error) {
 			console.error(error);
