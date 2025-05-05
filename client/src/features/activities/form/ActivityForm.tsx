@@ -9,6 +9,8 @@ import {
 } from "../../../lib/schema/activitySchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import TextInput from "../../../app/shared/components/TextInput";
+import SelectInput from "../../../app/shared/components/SelectInput";
+import { categoryOptions } from "./__helper__/categoryOptions";
 
 export default function ActivityForm() {
 	// Initializing the form with React Hook Form and Zod resolver
@@ -55,7 +57,13 @@ export default function ActivityForm() {
 					multiline
 					rows={3}
 				/>
-				<TextInput label="Category" control={control} name="category" />
+
+				<SelectInput
+					items={categoryOptions}
+					label="Category"
+					name="category"
+					control={control}
+				/>
 				<TextInput label="Date" control={control} name="date" />
 				<TextInput label="City" control={control} name="city" />
 				<TextInput label="Venue" control={control} name="venue" />
