@@ -1,10 +1,10 @@
+import { useEffect, useMemo, useState } from "react";
 import {
-	useController,
 	type FieldValues,
+	useController,
 	type UseControllerProps,
 } from "react-hook-form";
 import type { LocationIQSuggestion } from "../../../lib/types";
-import { useEffect, useMemo, useState } from "react";
 import {
 	Box,
 	debounce,
@@ -33,9 +33,10 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
 		}
 	}, [field.value]);
 
-	const locationURL =
+	const locationUrl =
 		"https://api.locationiq.com/v1/autocomplete?key=pk.9cbbc17b6fcc618c754fd06d65cfb76c&&limit=5&dedupe=1&";
 
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const fetchSuggestions = useMemo(
 		() =>
 			debounce(async (query: string) => {
@@ -45,9 +46,10 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
 				}
 
 				setLoading(true);
+
 				try {
 					const res = await axios.get<LocationIQSuggestion[]>(
-						`${locationURL}q=${query}`,
+						`${locationUrl}q=${query}`,
 					);
 					setSuggestions(res.data);
 				} catch (error) {
@@ -56,7 +58,7 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
 					setLoading(false);
 				}
 			}, 500),
-		[],
+		[locationUrl],
 	);
 
 	const handleChange = async (value: string) => {
@@ -69,12 +71,12 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
 			location.address?.city ||
 			location.address?.town ||
 			location.address?.village;
-		const venue = location.address?.road || location.display_name;
+		const venue = location.display_name;
 		const latitude = location.lat;
 		const longitude = location.lon;
 
 		setInputValue(venue);
-		field.onChange({ venue, city, latitude, longitude });
+		field.onChange({ city, venue, latitude, longitude });
 		setSuggestions([]);
 	};
 
@@ -91,7 +93,7 @@ export default function LocationInput<T extends FieldValues>(props: Props<T>) {
 			/>
 			{loading && <Typography>Loading...</Typography>}
 			{suggestions.length > 0 && (
-				<List>
+				<List sx={{ border: 1 }}>
 					{suggestions.map((suggestion) => (
 						<ListItemButton
 							divider

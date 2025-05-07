@@ -13,7 +13,10 @@ public class BaseActivityValidator<T, TDto> : AbstractValidator<T> where TDto : 
         RuleFor(x => selector(x).Description).NotEmpty().WithMessage("Description is required");
         RuleFor(x => selector(x).Date).GreaterThan(DateTime.Now).WithMessage("Date must be in the future");
         RuleFor(x => selector(x).Category).NotEmpty().WithMessage("Category is required");
-        RuleFor(x => selector(x).City).NotEmpty().WithMessage("City is required");
+        RuleFor(x => selector(x).City)
+     .Must(city => city == null || city.Length <= 100)
+     .WithMessage("City must be under 100 characters if provided.");
+
         RuleFor(x => selector(x).Venue).NotEmpty().WithMessage("Venue is required");
         RuleFor(x => selector(x).Latitude).NotEmpty().InclusiveBetween(-90, 90)
             .WithMessage("Latitude must be between -90 and 90");

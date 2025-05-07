@@ -53,6 +53,7 @@ export default function ActivityForm() {
 					{
 						...activity,
 						...activityData,
+						city: location.city,
 					},
 					{
 						onSuccess: () => navigate(`/activities/${activity.id}`),
@@ -63,12 +64,11 @@ export default function ActivityForm() {
 					{
 						...activityData,
 						id: "",
-						isCancelled: false,
-						city: activityData.city || "",
 					},
+
 					{
-						onSuccess: (id) => {
-							navigate(`/activities/${id}`);
+						onSuccess: (newActivity) => {
+							navigate(`/activities/${newActivity.id}`);
 						},
 					},
 				);
