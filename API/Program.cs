@@ -3,7 +3,9 @@ using Application.Activities.Commands;
 using Application.Activities.Queries;
 using Application.Activities.Validators;
 using Application.Common;
+using Domain;
 using FluentValidation;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -39,6 +41,16 @@ builder.Services.AddValidatorsFromAssemblyContaining<CreateActivityValidator>();
 // Only created when needed, not at startup
 builder.Services.AddTransient<ExceptionMiddleware>();
 
+// Adds the Identity service to the DI container
+// Configures Identity to use the User class and the AppDbContext class
+builder.Services.AddIdentityApiEndpoints<User>(opt =>
+{
+    opt.User.RequireUniqueEmail = true;
+
+})
+.AddRoles<IdentityRole>()
+.AddEntityFrameworkStores<AppDbContext>();
+
 // Builds the app
 var app = builder.Build();
 
@@ -51,16 +63,18 @@ app.UseCors(x => x
     .AllowCredentials()
     .WithOrigins(
         "http://localhost:3000",
-        "https://localhost:3000",
-        "https://3000s--main--reactivities-udemy--uedeagheomijie.coder.techary.com",
-        "http://3000s--main--reactivities-udemy--uedeagheomijie.coder.techary.com"
+        "https://localhost:3000"
     )
 );
+
+// Middleware for authentication and authorization
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Maps routes like /api/activites to controller methods.
 // similar to defining URLs in Django
 app.MapControllers();
-
+app.MapGroup("api").MapIdentityApi<User>();
 
 
 // Creates a scope so we can get services like the database context
@@ -72,10 +86,11 @@ try
 {
     // Gets the AppDbContext 
     var context = services.GetRequiredService<AppDbContext>();
+    var userManager = services.GetRequiredService<UserManager<User>>();
     // Applies any pending to the database 
     await context.Database.MigrateAsync();
     //Adds any initial data to the database
-    await DbInitializer.SeedData(context);
+    await DbInitializer.SeedData(context, userManager);
 }
 // Log any errors that occur during migration or seeding
 catch (System.Exception)

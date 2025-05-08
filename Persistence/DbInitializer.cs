@@ -1,5 +1,6 @@
 using System;
 using Domain;
+using Microsoft.AspNetCore.Identity;
 
 
 namespace Persistence;
@@ -7,11 +8,26 @@ namespace Persistence;
 public class DbInitializer
 {
 
-    public static async Task SeedData(AppDbContext context)
+    public static async Task SeedData(AppDbContext context, UserManager<User> userManager)
     {
+        if (!userManager.Users.Any())
+        {
+            var users = new List<User>
+            {
+                new() {DisplayName = "Usu", UserName = "usuedeaghe@gmail.com", Email = "usuedeaghe@gmail.com"},
+                new() {DisplayName = "Ehimen", UserName = "eedeaghee@gmail.com", Email = "eedeaghee@gmail.com"},
+                new() {DisplayName = "Omonefe", UserName = "omonefe245@gmail.com", Email = "omonefe245@gmail.com"},
+                new() {DisplayName = "Diana", UserName = "dianaomijie1@yahoo.com", Email = "dianaomijie1@yahoo.com"},
+            };
+
+            foreach (var user in users)
+            {
+                await userManager.CreateAsync(user, "Pa$$w0rd");
+            }
+        }
         // Check if there is any activty records in the database
-        if(context.Activities.Any()) return;
-       
+        if (context.Activities.Any()) return;
+
 
         var activities = new List<Activity>
         {
@@ -121,7 +137,7 @@ public class DbInitializer
                 Latitude = 51.5575525,
                 Longitude = -0.781404
             }
-            
+
         };
 
         context.Activities.AddRange(activities);
