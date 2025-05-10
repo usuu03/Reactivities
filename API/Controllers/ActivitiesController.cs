@@ -6,6 +6,7 @@ using Application.Activities.Queries;
 using Application.Common;
 using Domain;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -26,7 +27,7 @@ public class ActivitiesController : BaseApiController
 
     }
 
-
+    [Authorize]
     [HttpGet("{id}")]
     // Method that returns the details of a specific activity by its ID
     public async Task<ActionResult<Activity>> GetActivityDetail(string id)

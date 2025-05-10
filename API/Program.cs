@@ -5,7 +5,9 @@ using Application.Activities.Validators;
 using Application.Common;
 using Domain;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 
@@ -15,7 +17,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 // Registers Controllers as services tells .NET to look for controllers and use them for HTTP requests
-builder.Services.AddControllers();
+builder.Services.AddControllers(opt =>
+{
+    var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+    opt.Filters.Add(new AuthorizeFilter(policy));
+});
 
 // Tells .NET to use AppDbContext to talk to the database
 // and use SQLite as the database provider. The connection string is read from the appsettings.json file.
@@ -74,7 +80,7 @@ app.UseAuthorization();
 // Maps routes like /api/activites to controller methods.
 // similar to defining URLs in Django
 app.MapControllers();
-app.MapGroup("api").MapIdentityApi<User>();
+app.MapGroup("api").MapIdentityApi<User>(); // api/login
 
 
 // Creates a scope so we can get services like the database context
